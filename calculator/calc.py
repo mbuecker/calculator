@@ -1,15 +1,34 @@
 """
-Calculator
+File        calc.py
+Created     Manfred Bücker
+            (c) 2022
+Description calulator is a python module to interpret simple mathematical formulas.
+            - es wird die punkt vor strich rechnung beachtet
+            - Klammern sind möglich
+            - Funktionen wie sqrt sind möglich
+            - vordefinierte variablen wie PI sind vorhanden
+            - Rechenergebnisse können in Variablen abgelegt werden
+
+Example     2+3         => 5
+            2+3*2       => 8
+            (2+3)*2     => 10
+            sqrt(16)    => 4
+            a=2+5       => 7
+            a           => 7
+            b=a*2       => 14
+            b           => 14
+            a+b         => 21
 """
+
 import math
 
-Parservars = [("pi", math.pi),
+var_list = [("pi", math.pi),
               ("e", math.e),
               ("tau", math.tau)
               ]
 
 
-class Parser:
+class calculator:
     s_formel = ""
     pos = 0
     maxpos = 0
@@ -22,7 +41,13 @@ class Parser:
     def __init__(self, s_formel):
         self.setformel(s_formel)
 
-    def setformel(self, s_formel):
+    def setformel(self, s_formel: str):
+        """
+        Set new formular expression
+        :param s_formel: new expression
+
+        :return: none
+        """
         self.s_formel = s_formel
         self.pos = 0
         self.maxpos = len(self.s_formel)
@@ -32,9 +57,19 @@ class Parser:
         self.lastvartoken = ""
 
     def printformel(self):
+        """
+        Print the actual expression
+
+        :return: none
+        """
         print(self.s_formel)
 
     def printerror(self):
+        """
+        print last errormessage and indicate the problem colum
+
+        :return: none
+        """
         if self.errorFlag:
             print("errorFlag:", self.errorFlag)
             print("errorText:", self.errorText)
@@ -44,10 +79,19 @@ class Parser:
             print('^')
 
     def getformeltail(self):
+        """
+        deliver the uninterpeted part of the expression
+        :return: str
+        """
         s = self.s_formel[self.pos: self.maxpos]
         return s
 
     def get_clamped_value(self):
+        """
+        interpreted a clamped expression part
+
+        :return: result of expression
+        """
         cntbracket = 1
         cntintern = 0
         self.pos += 1
@@ -69,13 +113,17 @@ class Parser:
             value = 0
         else:
             r_formel = self.s_formel[self.pos - cntintern:self.pos - 1]
-            r_p = Parser(r_formel)
+            r_p = calculator(r_formel)
             value = r_p.parse()
 
-        return value
+        return float( value)
 
     def getvalue(self):
+        """
+        interpret the next value
 
+        :rtype: float
+        """
         negflag = 1
         value = 0.0
         self.lasttokenisvar = False
@@ -143,7 +191,7 @@ class Parser:
                     self.lasttokenisvar = True
                     self.lastvartoken = tok
 
-                    for v in Parservars:
+                    for v in var_list:
                         if v[0] == tok:
                             value = v[1]
                             break
@@ -207,14 +255,14 @@ class Parser:
             else:
                 if o == '=':
                     r_formel = self.getformeltail()
-                    r_p = Parser(r_formel)
+                    r_p = calculator(r_formel)
                     val3 = r_p.parse()
                     self.errorFlag = r_p.errorFlag
                     self.errorText = r_p.errorText
                     self.result = 0
                     if not self.errorFlag:
                         self.result = val3
-                        Parservars.insert(0, (self.lastvartoken, val3))
+                        var_list.insert(0, (self.lastvartoken, val3))
                     return self.result
 
                 val2 = self.getvalue()
@@ -242,7 +290,7 @@ class Parser:
 
                         # print("Starte Rekursion")
                         r_formel = self.getformeltail()
-                        r_p = Parser(r_formel)
+                        r_p = calculator(r_formel)
                         val3 = r_p.parse()
 
                         if not r_p.errorFlag:

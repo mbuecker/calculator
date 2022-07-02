@@ -2,7 +2,7 @@ from colorama import Fore
 from colorama import Style
 from calculator import calc
 
-p = calc.Parser("")
+p = calc.calculator("")
 
 testformeln = [
     [3.141592653589793, "pi"],
@@ -47,7 +47,7 @@ def test_parser():
 if __name__ == '__main__':
 
     while True:
-        line = input("Parser: ")
+        line = input("calculate: ")
         if line == "quit":
             break
         elif line == "":
