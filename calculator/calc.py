@@ -197,7 +197,7 @@ class Parser:
             # print(self.errorText)
             pass
         else:
-            # print("Value1:", v  al1)
+            # print(tetst"Value1:", v  al1)
 
             o = self.getoperator
             if self.errorFlag:
